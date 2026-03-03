@@ -11,7 +11,17 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "description": "doc info app",
+    "owner": "kovalenkoandrii",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "enabled": true,
+      "fallbackToCacheTimeout": 0    },
     "android": {
+      "versionCode": 1,
+      "package": "com.kovalenkoandrii.docinfo",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE"
       }
