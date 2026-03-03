@@ -5,8 +5,8 @@ import {
   StyleSheet,
   TextInput,
   Text,
-  SafeAreaView,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { PubMedAPI } from "../api/pubmed";
 import { ArticleCard } from "../components/ArticleCard";
 
