@@ -15,11 +15,18 @@ export default function HomeScreen() {
   const [ids, setIds] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  
   const handleSearch = async () => {
     setLoading(true);
-    const result = await PubMedAPI.searchArticles(query);
-    setIds(result);
-    setLoading(false);
+    try {
+      const result = await PubMedAPI.searchArticles(query);
+      // Берем только первые 3 статьи, чтобы не превышать лимит PubMed
+      setIds(result.slice(0, 3));
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
