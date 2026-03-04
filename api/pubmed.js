@@ -18,7 +18,7 @@ export const PubMedAPI = {
       );
       const data = await response.json();
       // Проверяем, есть ли такой ключ в ответе
-      if (data.result && data.result[id]) {
+      if (data && data.result && data.result[id]) {
         return data.result[id];
       }
       return null;

@@ -1,11 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  View,
-  FlatList,
-  StyleSheet,
-  TextInput,
-  Text,
-} from "react-native";
+import { View, FlatList, StyleSheet, TextInput, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PubMedAPI } from "../api/pubmed";
 import { ArticleCard } from "../components/ArticleCard";
@@ -15,7 +9,6 @@ export default function HomeScreen() {
   const [ids, setIds] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  
   const handleSearch = async () => {
     setLoading(true);
     try {
@@ -46,7 +39,7 @@ export default function HomeScreen() {
       </View>
       <FlatList
         data={ids}
-        keyExtractor={(item) => item}
+        keyExtractor={(item) => item.toString()}
         renderItem={({ item }) => <ArticleCard pmid={item} />}
         contentContainerStyle={{ padding: 15 }}
       />
