@@ -6,7 +6,7 @@ export default function RootLayout() {
       {/* name="index" соответствует файлу app/index.js */}
       <Stack.Screen name="index" options={{ title: "Мед поиск" }} />
       {/* name="details/[id]" соответствует файлу app/details/[id].js */}
-      <Stack.Screen name="details/[id]" options={{ title: "Статья" }} />
+      <Stack.Screen name="details/[id]" options={{ title: "Загружаем..." }} />
     </Stack>
   );
 }

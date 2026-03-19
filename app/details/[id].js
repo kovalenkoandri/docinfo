@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import { PubMedAPI } from "../../api/pubmed";
 import { GeminiAI } from "../../api/gemini";
 
@@ -52,6 +52,7 @@ export default function ArticleDetails() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Stack.Screen options={{title: `Статья ${id}`, headerBackTitle: 'Назад'}} />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.label}>PMID: {id}</Text>
         <Text style={styles.title}>Abstract</Text>
