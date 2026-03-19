@@ -5,15 +5,26 @@ import {
   ScrollView,
   StyleSheet,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams } from "expo-router";
 import { PubMedAPI } from "../../api/pubmed";
+import { GeminiAI } from "../../api/gemini";
 
 export default function ArticleDetails() {
   const { id } = useLocalSearchParams(); // Получаем PMID из URL
   const [abstract, setAbstract] = useState("");
   const [loading, setLoading] = useState(true);
+  const [aiSummary, setAiSummary] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+
+  const handleAIAnalysis = async () => {
+    setAiLoading(true);
+    const summary = await GeminiAI.simplifyMedicalText(abstract);
+    setAiSummary(summary);
+    setAiLoading(false);
+  };
 
   useEffect(() => {
     const loadDetails = async () => {
@@ -44,10 +55,24 @@ export default function ArticleDetails() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.label}>PMID: {id}</Text>
         <Text style={styles.title}>Abstract</Text>
-
         <View style={styles.card}>
           <Text style={styles.abstractText}>
             {abstract || "Аннотация отсутствует в базе данных."}
+            // В return под текстом аннотации:
+            <TouchableOpacity
+              onPress={handleAIAnalysis}
+              style={styles.aiButton}
+            >
+              <Text style={{ color: "#fff" }}>
+                🤖 {aiLoading ? "Анализирую..." : "Упростить текст (Gemini)"}
+              </Text>
+            </TouchableOpacity>
+            {aiSummary ? (
+              <View style={styles.aiCard}>
+                <Text style={styles.aiTitle}>AI Резюме:</Text>
+                <Text>{aiSummary}</Text>
+              </View>
+            ) : null}{" "}
           </Text>
         </View>
 
