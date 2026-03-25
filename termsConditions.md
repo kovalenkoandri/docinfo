@@ -1,6 +1,6 @@
 # Terms and Conditions
 
-**Last Updated: 2025-01-29**
+**Last Updated: 2026-03-25**
 
 These Terms and Conditions ("Terms") govern your use of the **DocInfo** mobile application ("App") provided by **kovalenkoandri** ("we," "our," or "us"). By accessing or using the App, you agree to comply with these Terms. If you do not agree to these Terms, please do not use the App.
 
@@ -58,7 +58,7 @@ You agree to indemnify and hold harmless **kovalenkoandri**, its affiliates, emp
 
 ## 11. **Governing Law**
 
-These Terms are governed by the laws of **[Your Country/State]** without regard to its conflict of law principles. Any disputes will be resolved in the competent courts of **[Your Country/State]**.
+These Terms are governed by the laws of Ukraine without regard to its conflict of law principles. Any disputes will be resolved in the competent courts of Ukraine.
 
 ## 12. **Changes to These Terms**
 
