@@ -11,19 +11,38 @@ export const PubMedAPI = {
   },
 
   // Краткая инфо для карточки
+  // async getSummary(id) {
+  //   try {
+  //     const response = await fetch(
+  //       `${BASE_URL}/esummary.fcgi?db=pubmed&id=${id}&retmode=json`,
+  //     );
+  //     const data = await response.json();
+  //     // Проверяем, есть ли такой ключ в ответе
+  //     if (data && data.result && data.result[id]) {
+  //       return data.result[id];
+  //     }
+  //     return null;
+  //   } catch (error) {
+  //     console.error("Ошибка API:", error);
+  //     return null;
+  //   }
+  // },
+  // В методе getSummary(id) добавь проверку DOI:
   async getSummary(id) {
     try {
       const response = await fetch(
         `${BASE_URL}/esummary.fcgi?db=pubmed&id=${id}&retmode=json`,
       );
       const data = await response.json();
-      // Проверяем, есть ли такой ключ в ответе
-      if (data && data.result && data.result[id]) {
-        return data.result[id];
-      }
-      return null;
+      const article = data.result[id];
+      return {
+        title: article.title,
+        abstract: article.abstract, // если он есть в summary
+        source: article.source,
+        doi: article.elocationid, // Вот здесь обычно лежит ссылка
+        url: `https://pubmed.ncbi.nlm.nih.gov/${id}/`, // Прямая ссылка на страницу PubMed
+      };
     } catch (error) {
-      console.error("Ошибка API:", error);
       return null;
     }
   },

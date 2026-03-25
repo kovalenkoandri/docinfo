@@ -31,4 +31,31 @@ export const GeminiAI = {
       return "Не удалось проанализировать текст.";
     }
   },
+  // async translateArticle(title, abstract) {
+  //   const prompt = `
+  //     Ты — профессиональный медицинский переводчик. 
+  //     Переведи на русский язык заголовок и аннотацию статьи. 
+  //     Используй строгую медицинскую терминологию. 
+      
+  //     ЗАГОЛОВОК: ${title}
+  //     АННОТАЦИЯ: ${abstract}
+      
+  //     Верни ответ в формате JSON:
+  //     {
+  //       "ruTitle": "переведенный заголовок",
+  //       "ruAbstract": "переведенная аннотация"
+  //     }
+  //   `;
+
+  //   try {
+  //     const result = await model.generateContent(prompt);
+  //     const text = result.response.text();
+  //     // Очищаем текст от возможных markdown-меток (типа ```json)
+  //     const cleanJson = text.replace(/```json|```/g, "").trim();
+  //     return JSON.parse(cleanJson);
+  //   } catch (error) {
+  //     console.error("Gemini Translate Error:", error);
+  //     return null;
+  //   }
+  // },
 };

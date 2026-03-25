@@ -14,7 +14,7 @@ export default function HomeScreen() {
     try {
       const result = await PubMedAPI.searchArticles(query);
       // Берем только первые 3 статьи, чтобы не превышать лимит PubMed
-      setIds(result.slice(0, 3));
+      setIds(result.slice(0, 1));
     } catch (e) {
       console.error(e);
     } finally {

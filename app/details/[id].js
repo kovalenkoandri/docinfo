@@ -9,12 +9,14 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useLocalSearchParams } from "expo-router";
+import * as Linking from "expo-linking";
 import { PubMedAPI } from "../../api/pubmed";
 import { GeminiAI } from "../../api/gemini";
 
 export default function ArticleDetails() {
   const { id } = useLocalSearchParams(); // Получаем PMID из URL
   const [abstract, setAbstract] = useState("");
+  // const [ruData, setRuData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [aiSummary, setAiSummary] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
@@ -25,7 +27,11 @@ export default function ArticleDetails() {
     setAiSummary(summary);
     setAiLoading(false);
   };
-
+  const openFullArticle = () => {
+    // Самый надежный способ — отправить на веб-версию PubMed,
+    // где уже есть кнопка "Full Text Link" от издателя
+    Linking.openURL(`https://pubmed.ncbi.nlm.nih.gov/${id}/`);
+  };
   useEffect(() => {
     const loadDetails = async () => {
       try {
@@ -41,6 +47,31 @@ export default function ArticleDetails() {
     loadDetails();
   }, [id]);
 
+  // useEffect(() => {
+  //   const loadAndTranslate = async () => {
+  //     setLoading(true);
+  //     try {
+  //       // 1. Получаем данные из PubMed (англ)
+  //       const article = await PubMedAPI.getSummary(id);
+
+  //       // 2. Сразу отправляем в Gemini на перевод
+  //       const translated = await GeminiAI.translateArticle(
+  //         article.title,
+  //         article.abstract,
+  //       );
+
+  //       if (translated) {
+  //         setRuData(translated); // Сохраняем русский вариант
+  //       }
+  //     } catch (e) {
+  //       console.error(e);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   loadAndTranslate();
+  // }, [id]);
+
   if (loading) {
     return (
       <View style={styles.center}>
@@ -52,7 +83,9 @@ export default function ArticleDetails() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Stack.Screen options={{title: `Статья ${id}`, headerBackTitle: 'Назад'}} />
+      <Stack.Screen
+        options={{ title: `Статья ${id}`, headerBackTitle: "Назад" }}
+      />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.label}>PMID: {id}</Text>
         <Text style={styles.title}>Abstract</Text>
@@ -76,7 +109,16 @@ export default function ArticleDetails() {
             ) : null}{" "}
           </Text>
         </View>
-
+        <TouchableOpacity onPress={openFullArticle} style={styles.linkButton}>
+          <Text style={styles.linkText}>
+            🔗 Открыть полный текст в браузере
+          </Text>
+        </TouchableOpacity>
+        {/* <View style={styles.card}>
+          <Text style={styles.abstractText}>
+            {ruData || "Не удалось перевести на русский язык."}
+          </Text>
+        </View> */}
         <Text style={styles.footer}>
           Данные предоставлены National Library of Medicine
         </Text>
