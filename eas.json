@@ -20,7 +20,7 @@
     "production": {
       "autoIncrement": false,
       "channel": "master",
-      "credentialsSource": "local"
+      "credentialsSource": "remote"
     }
   },
   "submit": {
