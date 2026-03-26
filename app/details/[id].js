@@ -52,16 +52,20 @@ export default function ArticleDetails() {
   //     setLoading(true);
   //     try {
   //       // 1. Получаем данные из PubMed (англ)
-  //       const article = await PubMedAPI.getSummary(id);
-
+  //       const { title } = await PubMedAPI.getSummary(id);
+  //       const article = await PubMedAPI.getFullDetails(id);
+  //       console.log("Article data:", article);
+  //       console.log("Title data:", title);
   //       // 2. Сразу отправляем в Gemini на перевод
-  //       const translated = await GeminiAI.translateArticle(
-  //         article.title,
-  //         article.abstract,
-  //       );
-
+  //       const translated = await handleAIAnalysis();
+  //       // const translated = await GeminiAI.translateArticle(
+  //       //   title,
+  //       //   'no eng data',
+  //       // );
+  //       console.log("Translated data:", translated);
   //       if (translated) {
-  //         setRuData(translated); // Сохраняем русский вариант
+  //         // setAbstract('' + translated); // Сохраняем русский вариант
+  //         setAbstract(translated); // Сохраняем русский вариант
   //       }
   //     } catch (e) {
   //       console.error(e);
@@ -130,7 +134,7 @@ export default function ArticleDetails() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#f2f2f7" },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  scrollContent: { padding: 20 },
+  // scrollContent: { padding: 20 },
   label: { color: "#8e8e93", fontSize: 14, marginBottom: 8 },
   title: { fontSize: 24, fontWeight: "bold", color: "#000", marginBottom: 20 },
   card: {

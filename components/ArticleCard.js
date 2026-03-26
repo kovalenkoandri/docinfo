@@ -31,7 +31,7 @@ export const ArticleCard = ({ pmid }) => {
     <Link href={`/details/${pmid}`} asChild>
       <Pressable style={styles.card}>
         <Text style={styles.date}>
-          {data.pubdate} • {data.source}
+          {data.pubdate || 'no date'} • {data.source}
         </Text>
         <Text style={styles.title} numberOfLines={2}>
           {data.title}
