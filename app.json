@@ -4,7 +4,11 @@
     "slug": "doc-info",
     "scheme": "docinfo",
     "version": "1.0.2",
-    "orientation": "portrait",
+    "orientation": "default",
+    "androidStatusBar": {
+      "barStyle": "dark-content",
+      "translucent": true
+    },
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "plugins": [
@@ -13,7 +17,7 @@
         {
           "image": "./assets/icon.png",
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#00000000"
         }
       ],
       [
