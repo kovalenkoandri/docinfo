@@ -3,7 +3,7 @@
     "name": "DocInfo",
     "slug": "doc-info",
     "scheme": "docinfo",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -14,6 +14,14 @@
           "image": "./assets/icon.png",
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true
+          }
         }
       ]
     ],
@@ -28,7 +36,7 @@
       "url": "https://u.expo.dev/772ad20a-abfe-4390-b68a-2ced0861f6ec"
     },
     "android": {
-      "versionCode": 1,
+      "versionCode": 3,
       "package": "com.kovalenkoandrii.docinfo",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE"
