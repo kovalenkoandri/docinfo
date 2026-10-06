@@ -12,8 +12,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// --- ИСХОДНЫЕ ДАННЫЕ ---
-const MUSHROOMS_DATA = [
+// --- ИСХОДНЫЕ ДАННЫЕ (Грибы + Пробиотики) ---
+const SUPPLEMENTS_DATA = [
+  // --- Грибы ---
   {
     id: "chaga",
     nameRu: "Чага",
@@ -70,29 +71,51 @@ const MUSHROOMS_DATA = [
     categories: ["Иммунитет", "Энергия"],
     activeCompounds: "D-фракция полисахаридов, грифолан",
   },
+
+  // --- Пробиотики (Бифидобактерии) ---
+  {
+    id: "b_bifidum",
+    nameRu: "Бифидобактерия бифидум",
+    latinName: "Bifidobacterium bifidum",
+    categories: ["Пробиотики", "Иммунитет"],
+    activeCompounds:
+      "Молочная кислота, уксусная кислота, короткоцепочечные жирные кислоты (КЦЖК)",
+  },
+  {
+    id: "b_longum",
+    nameRu: "Бифидобактерия лонгум",
+    latinName: "Bifidobacterium longum",
+    categories: ["Пробиотики", "Иммунитет", "Сон/Антистресс"],
+    activeCompounds: "КЦЖК, пептиды, синтез витаминов группы B, антиоксиданты",
+  },
+  {
+    id: "b_adolescentis",
+    nameRu: "Бифидобактерия адолесцентис",
+    latinName: "Bifidobacterium adolescentis",
+    categories: ["Пробиотики", "Иммунитет"],
+    activeCompounds: "ГАМК (GABA), фолаты, ацетат, бутират",
+  },
 ];
 
 const CATEGORIES = [
   "Все",
+  "Пробиотики",
   "Ноотропы",
   "Иммунитет",
   "Энергия",
   "Сон/Антистресс",
 ];
 
-export default function MushroomGridScreen() {
+export default function SupplementGridScreen() {
   const [selectedCategory, setSelectedCategory] = useState("Все");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Комбинированная фильтрация по категории и поисковой строке
-  const filteredMushrooms = useMemo(() => {
-    return MUSHROOMS_DATA.filter((item) => {
-      // 1. Фильтр по категории
+  const filteredItems = useMemo(() => {
+    return SUPPLEMENTS_DATA.filter((item) => {
       const matchesCategory =
         selectedCategory === "Все" ||
         item.categories.includes(selectedCategory);
 
-      // 2. Фильтр по названию, латыни и биоактивным веществам
       const query = searchQuery.trim().toLowerCase();
       const matchesSearch =
         query === "" ||
@@ -104,17 +127,18 @@ export default function MushroomGridScreen() {
     });
   }, [selectedCategory, searchQuery]);
 
-  // Рендер текстовой карточки гриба
-  const renderMushroomCard = ({ item }) => (
+  const renderCard = ({ item }) => (
     <TouchableOpacity activeOpacity={0.8} style={styles.card}>
-      <Text style={styles.cardTitle}>{item.nameRu}</Text>
-      <Text style={styles.cardSubtitle}>{item.latinName}</Text>
+      <View>
+        <Text style={styles.cardTitle}>{item.nameRu}</Text>
+        <Text style={styles.cardSubtitle}>{item.latinName}</Text>
 
-      <View style={styles.compoundsWrapper}>
-        <Text style={styles.compoundsLabel}>Вещества:</Text>
-        <Text style={styles.cardCompounds} numberOfLines={3}>
-          {item.activeCompounds}
-        </Text>
+        <View style={styles.compoundsWrapper}>
+          <Text style={styles.compoundsLabel}>Вещества / Продукты:</Text>
+          <Text style={styles.cardCompounds} numberOfLines={3}>
+            {item.activeCompounds}
+          </Text>
+        </View>
       </View>
 
       <View style={styles.badgeContainer}>
@@ -129,13 +153,13 @@ export default function MushroomGridScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.headerTitle}>Справочник грибов</Text>
+      <Text style={styles.headerTitle}>Справочник нутрицевтиков</Text>
 
       {/* Поисковая строка */}
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Поиск по названию или веществам (NGF, тритерпены...)"
+          placeholder="Поиск по названию или веществам (ГАМК, КЦЖК, NGF...)"
           placeholderTextColor="#64748B"
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -175,8 +199,8 @@ export default function MushroomGridScreen() {
       {/* Сетка компонентов FlatList */}
       <View style={styles.listContainer}>
         <FlatList
-          data={filteredMushrooms}
-          renderItem={renderMushroomCard}
+          data={filteredItems}
+          renderItem={renderCard}
           numColumns={2}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listPadding}
@@ -264,12 +288,12 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     margin: 6,
     padding: 12,
-    justify: "space-between",
+    justifyContent: "space-between",
     borderWidth: 1,
     borderColor: "#334155",
   },
   cardTitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "700",
     color: "#F8FAFC",
   },
@@ -297,7 +321,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 4,
-    marginTop: "auto",
+    marginTop: 8,
   },
   badge: {
     backgroundColor: "#0F172A",
@@ -317,4 +341,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
-registerRootComponent(MushroomGridScreen);
+
+registerRootComponent(SupplementGridScreen);
