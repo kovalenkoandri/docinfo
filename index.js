@@ -1,18 +1,16 @@
 import { registerRootComponent } from "expo";
 import React, { useState, useMemo } from "react";
 import {
-  StyleSheet,
   Text,
   View,
   TouchableOpacity,
-  ScrollView,
   TextInput,
   FlatList,
-  Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { SUPPLEMENTS_DATA } from "./supplementsData";
+import { styles } from "./appStyles";
 
-// --- КАТЕГОРИИ ---
 const CATEGORIES = [
   "Антистарение",
   "Витамины",
@@ -21,468 +19,37 @@ const CATEGORIES = [
   "Грибы",
 ];
 
-// --- ИСХОДНЫЕ ДАННЫЕ С ПОДРОБНЫМИ ОПИСАНИЯМИ ---
-const SUPPLEMENTS_DATA = [
-  // ================= АНТИСТАРЕНИЕ =================
-  {
-    id: "quercetin",
-    nameRu: "Кверцетин",
-    latinName: "Quercetin",
-    category: "Антистарение",
-    action:
-      "• Выступает мощным сенолитиком, способствуя элиминации стареющих (senescent) клеток.\n" +
-      "• Ингибирует ферменты воспаления (3CLpro, 5-LOX, COX-2) и уменьшает проявления SASP.\n" +
-      "• Проявляет капилляропротекторные свойства и снижает проницаемость сосудистой стенки.\n" +
-      "• Стабилизирует мембраны тучных клеток, блокируя высвобождение гистамина.\n" +
-      "• Повышает биодоступность и синергично усиливает действие других полифенолов.",
-    activeCompounds:
-      "Кверцетина дигидрат, Изокверцитрин, Энзиматически модифицированный кверцетин (EMIQ)",
-  },
-
-  // ================= ВИТАМИНЫ =================
-  {
-    id: "vitamin_b1",
-    nameRu: "Витамин B1",
-    latinName: "Thiamine",
-    category: "Витамины",
-    action:
-      "• Участвует в превращении углеводов в АТФ (основную энергию клеток).\n" +
-      "• Поддерживает проведение нервных импульсов и функцию ЦНС.\n" +
-      "• Нормализует работу сердечно-сосудистой системы и мышц.\n" +
-      "• Снижает риск накопления молочной кислоты при нагрузках.\n" +
-      "• Защищает нервные клетки от окислительного стресса.",
-    activeCompounds: "Тиамина гидрохлорид, Бенфотиамин",
-  },
-  {
-    id: "vitamin_b2",
-    nameRu: "Витамин B2",
-    latinName: "Riboflavin",
-    category: "Витамины",
-    action:
-      "• Входит в состав коферментов FMN и FAD, обеспечивающих клеточное дыхание.\n" +
-      "• Поддерживает здоровье кожи, ногтей и слизистых оболочек.\n" +
-      "• Предотвращает утомляемость глаз и снижает риск развития катаракты.\n" +
-      "• Участвует в активации витаминов B6, B9 (фолата) и железа.\n" +
-      "• Проявляет антиоксидантные свойства в составе глутатионредуктазы.",
-    activeCompounds: "Рибофлавин, Рибофлавин-5-фосфат (R-5-P)",
-  },
-  {
-    id: "vitamin_b3",
-    nameRu: "Витамин B3",
-    latinName: "Niacin / Nicotinamide",
-    category: "Витамины",
-    action:
-      "• Является предшественником NAD+/NADP+, необходимых для клеточной энергии.\n" +
-      "• Регулирует уровень холестерина и поддерживают липидный баланс.\n" +
-      "• Улучшает микроциркуляцию и расширяет мелкие кровеносные сосуды.\n" +
-      "• Стимулирует процессы репарации ДНК и омоложения клеток.\n" +
-      "• Поддерживает когнитивные функции и здоровье эпидермиса.",
-    activeCompounds: "Никотиновая кислота, Никотинамид, NMN, NR",
-  },
-  {
-    id: "vitamin_b6",
-    nameRu: "Витамин B6",
-    latinName: "Pyridoxine",
-    category: "Витамины",
-    action:
-      "• Необходим для синтеза нейромедиаторов (серотонина, дофамина, ГАМК).\n" +
-      "• Регулирует белковый обмен и аминокислотный метаболизм.\n" +
-      "• Снижает уровень гомоцистеина, защищая сосуды от повреждений.\n" +
-      "• Участвует в синтезе гемоглобина и образовании эритроцитов.\n" +
-      "• Нормализует работу нервной системы и эмоциональный фон.",
-    activeCompounds: "Пиридоксина гидрохлорид, Пиридоксаль-5-фосфат (P-5-P)",
-  },
-
-  // ================= МИНЕРАЛЫ =================
-  {
-    id: "potassium_citrate",
-    nameRu: "Цитрат калия",
-    latinName: "Potassium Citrate",
-    category: "Минералы",
-    action:
-      "• Поддерживает электролитный баланс и водно-солевой обмен.\n" +
-      "• Снижает кислотность мочи, предотвращая образование оксалатных камней.\n" +
-      "• Регулирует артериальное давление и выравнивает сердечный ритм.\n" +
-      "• Уменьшает выведение кальция с мочой, укрепляя костную ткань.\n" +
-      "• Предотвращает мышечные спазмы и судороги при нагрузках.",
-    activeCompounds: "Калиевая соль лимонной кислоты",
-  },
-  {
-    id: "magnesium_glycinate",
-    nameRu: "Глицинат магния",
-    latinName: "Magnesium Glycinate",
-    category: "Минералы",
-    action:
-      "• Расслабляет скелетную мускулатуру и снимает физическое напряжение.\n" +
-      "• За счет сочетания с глицином оказывает мягкое успокаивающее действие.\n" +
-      "• Нормализует фазы глубокого сна и облегчает засыпание.\n" +
-      "• Обладает высокой биодоступностью и не раздражает ЖКТ.\n" +
-      "• Участвует в более чем 300 ферментативных реакциях организма.",
-    activeCompounds: "Магния хелат (бисглицинат)",
-  },
-  {
-    id: "zinc_glycinate",
-    nameRu: "Цинк глицинат",
-    latinName: "Zinc Glycinate",
-    category: "Минералы",
-    action:
-      "• Стимулирует активность Т-лимфоцитов и укрепляет иммунный ответ.\n" +
-      "• Ускоряет процессы регенерации и заживления повреждений кожи.\n" +
-      "• Поддерживает синтез тестостерона и здоровье репродуктивной системы.\n" +
-      "• Обладает мощным антиоксидантным эффектом против свободных радикалов.\n" +
-      "• Не вступает в конфликт с другими минералами при всасывании.",
-    activeCompounds: "Цинка хелат (бисглицинат)",
-  },
-
-  // ================= ПРОБИОТИКИ =================
-  {
-    id: "l_acidophilus",
-    nameRu: "Лактобактерия ацидофильная",
-    latinName: "Lactobacillus acidophilus",
-    category: "Пробиотики",
-    action:
-      "• Эффективно расщепляет лактозу, вырабатывая фермент лактазу и снижая дискомфорт в ЖКТ.\n" +
-      "• Создает кислую среду (pH), вырабатывая молочную кислоту и пероксид водорода, что подавляет рост Salmonella, E. coli и Candida.\n" +
-      "• Стимулирует локальный иммунитет слизистой оболочки (секреторный IgA).\n" +
-      "• Поддерживает целостность кишечного барьера и предотвращает синдром повышенной эпителиальной проницаемости.\n" +
-      "• Участвует в синтезе витаминов группы B и улучшает усвоение кальция и железа.",
-    activeCompounds: "Молочная кислота, Ацидофилин, Пероксид водорода, Лактаза",
-  },
-  {
-    id: "b_bifidum",
-    nameRu: "Бифидобактерия бифидум",
-    latinName: "Bifidobacterium bifidum",
-    category: "Пробиотики",
-    action:
-      "• Формирует защитную пристеночную биопленку на слизистой кишечника.\n" +
-      "• Подавляет размножение патогенных и условно-патогенных штаммов.\n" +
-      "• Синтезирует короткоцепочечные жирные кислоты (КЦЖК) для питания колоноцитов.\n" +
-      "• Уменьшает выраженность воспалительных процессов в стенке кишки.\n" +
-      "• Улучшает приживаемость других полезных представителей микробиоты.",
-    activeCompounds: "КЦЖК, Молочная кислота, Ацетат",
-  },
-  {
-    id: "b_longum",
-    nameRu: "Бифидобактерия лонгум",
-    latinName: "Bifidobacterium longum",
-    category: "Пробиотики",
-    action:
-      "• Активно снижает системное воспаление, нейтрализуя эндотоксины.\n" +
-      "• Поддерживает связь по оси «кишечник-мозг», снижая уровень кортизола.\n" +
-      "• Расщепляет сложные растительные углеводы и неперевариваемую клетчатку.\n" +
-      "• Повышает устойчивость организма к сезонным вирусным инфекциям.\n" +
-      "• Нормализует стул и уменьшает симптомы синдрома раздраженного кишечника.",
-    activeCompounds: "КЦЖК, Витамины группы B, Бутират",
-  },
-  {
-    id: "b_adolescentis",
-    nameRu: "Бифидобактерия адолесцентис",
-    latinName: "Bifidobacterium adolescentis",
-    category: "Пробиотики",
-    action:
-      "• Стимулирует продуцирование ГАМК (GABA), оказывая успокаивающий эффект.\n" +
-      "• Является активным продуцентом фолатов (природной формы витамина B9).\n" +
-      "• Синтезирует масляную кислоту (бутират), укрепляющую эпителий.\n" +
-      "• Подавляет процессы гниения и брожения в толстом кишечнике.\n" +
-      "• Помогает стабилизировать эмоциональный фон и устойчивость к стрессу.",
-    activeCompounds: "ГАМК (GABA), Фолаты, Бутират",
-  },
-  {
-    id: "b_breve",
-    nameRu: "Бифидобактерия бреве",
-    latinName: "Bifidobacterium breve",
-    category: "Пробиотики",
-    action:
-      "• Подавляет развитие ротавирусов и кандида-инфекций у детей и взрослых.\n" +
-      "• Синтезирует уксусную и молочную кислоты, оптимизируя pH.\n" +
-      "• Поддерживает здоровый липидный обмен и снижает накопление висцерального жира.\n" +
-      "• Снижает риск развития аллергических реакций и атопического дерматита.\n" +
-      "• Улучшает переносимость пищевых продуктов.",
-    activeCompounds: "Уксусная кислота, Органические кислоты",
-  },
-  {
-    id: "b_animalis_lactis",
-    nameRu: "Бифидобактерия анималис лактис",
-    latinName: "Bifidobacterium animalis ssp. lactis",
-    category: "Пробиотики",
-    action:
-      "• Нормализует время транзита пищи и устраняет запоры.\n" +
-      "• Высокоустойчива к действию желчных кислот и желудочного сока.\n" +
-      "• Укрепляет общий иммунный ответ после приема антибиотиков.\n" +
-      "• Снижает вздутие и газообразование после приема пищи.\n" +
-      "• Стимулирует моторику толстого кишечника.",
-    activeCompounds: "Органические кислоты, КЦЖК",
-  },
-  {
-    id: "b_longum_longum",
-    nameRu: "Бифидобактерия лонгум лонгум",
-    latinName: "Bifidobacterium longum ssp. longum",
-    category: "Пробиотики",
-    action:
-      "• Связывает свободые радикалы и проявляет выраженный антиоксидантный эффект.\n" +
-      "• Ферментирует широкий спектр пищевых волокон и олигосахаридов.\n" +
-      "• Способствует выведению тяжелых металлов и токсинов из ЖКТ.\n" +
-      "• Поддерживает баланс микрофлоры у людей старшего возраста.\n" +
-      "• Улучшает состояние слизистой оболочки при воспалениях.",
-    activeCompounds: "Антиоксиданты, Метаболиты растительных волокон",
-  },
-  {
-    id: "b_longum_infantis",
-    nameRu: "Бифидобактерия лонгум инфантис",
-    latinName: "Bifidobacterium longum ssp. infantis",
-    category: "Пробиотики",
-    action:
-      "• Специализируется на усвоении олигосахаридов грудного молока (HMO).\n" +
-      "• Предотвращает проникновение патогенов через стеночный барьер.\n" +
-      "• Снижает выработку провоспалительных цитокинов в кишечнике.\n" +
-      "• Оптимизирует процесс формирования иммунной системы с раннего возраста.\n" +
-      "• Защищает слизистую от атрофических изменений.",
-    activeCompounds: "Утилизаторы HMO, Короткоцепочечные жирные кислоты",
-  },
-  {
-    id: "l_plantarum",
-    nameRu: "Лактобактерия плантарум",
-    latinName: "Lactobacillus plantarum",
-    category: "Пробиотики",
-    action:
-      "• Вырабатывает плантарицины — природные антибиотики широкого спектра.\n" +
-      "• Сохраняет целостность плотных контактов (tight junctions) эпителия.\n" +
-      "• Уменьшает синдром раздраженного кишечника и абдоминальную боль.\n" +
-      "• Способствует снижению уровня системного воспаления и гистамина.\n" +
-      "• Устойчива к большинству популярных антибиотиков.",
-    activeCompounds: "Плантарицины, КЦЖК, Перекись водорода",
-  },
-  {
-    id: "l_rhamnosus",
-    nameRu: "Лактобактерия рамнозус",
-    latinName: "Lactobacillus rhamnosus",
-    category: "Пробиотики",
-    action:
-      "• Стимулирует выработку секреторного иммуноглобулина A (IgA).\n" +
-      "• Эффективно предотвращает и облегчает диарею путешественников.\n" +
-      "• Уменьшает проявления атопического дерматита и экземы.\n" +
-      "• Препятствует адгезии патогенных бактерий к стенкам кишечника.\n" +
-      "• Способствует снижению тяги к сладкой пище.",
-    activeCompounds: "Молочная кислота, Бактериоцины",
-  },
-  {
-    id: "l_bulgaricus",
-    nameRu: "Болгарская палочка",
-    latinName: "Lactobacillus delbrueckii ssp. bulgaricus",
-    category: "Пробиотики",
-    action:
-      "• Активизирует ферментацию молочнокислых продуктов и расщепление белков.\n" +
-      "• Вырабатывает ацетальдегид и органические кислоты, подавляющие гниение.\n" +
-      "• Стимулирует перистальтику кишечника и своевременное опорожнение.\n" +
-      "• Помогает нейтрализовать токсические продукты метаболизма.\n" +
-      "• Улучшаетусвоение питательных веществ из пищи.",
-    activeCompounds: "Молочная кислота, Ацетальдегид",
-  },
-  {
-    id: "l_casei",
-    nameRu: "Лактобактерия казеи",
-    latinName: "Lactobacillus casei",
-    category: "Пробиотики",
-    action:
-      "• Повышает активность клеток-киллеров (NK-клеток) иммунной системы.\n" +
-      "• Подавляет рост бактерии Helicobacter pylori в желудке.\n" +
-      "• Стимулирует нормализацию стула при склонности к диарее.\n" +
-      "• Выделяет биоактивные пептиды, поддерживающие нормальное давление.\n" +
-      "• Улучшает состав собственной симбиотической флоры.",
-    activeCompounds: "Биоактивные пептиды, Молочная кислота",
-  },
-  {
-    id: "l_paracasei",
-    nameRu: "Лактобактерия параказеи",
-    latinName: "Lactobacillus paracasei",
-    category: "Пробиотики",
-    action:
-      "• Модулирует баланс Th1/Th2 иммунных клеток, снижая аллергические реакции.\n" +
-      "• Подавляет размножение патогенов в ротовой полости и носоглотке.\n" +
-      "• Укрепляет защитный барьер при воспалительных заболеваниях кишечника.\n" +
-      "• Снижает чувствительность слизистой к внешним раздражителям.\n" +
-      "• Поддерживает нормальную микрофлору урогенитального тракта.",
-    activeCompounds: "Липотейхоевые кислоты, Бактериоцины",
-  },
-  {
-    id: "l_reuteri",
-    nameRu: "Лактобактерия ройтери",
-    latinName: "Lactobacillus reuteri",
-    category: "Пробиотики",
-    action:
-      "• Продуцирует ройтерин — вещество с антимикробным действием против грам- и грам+ бактерий.\n" +
-      "• Способствует снижению уровня холестерина в крови.\n" +
-      "• Стимулирует выработку окситоцина, способствуя снижению тревожности.\n" +
-      "• Уменьшает младенческие колики и дискомфорт в животе.\n" +
-      "• Поддерживает здоровье зубов и десен, снижая кариес.",
-    activeCompounds: "Ройтерин, Кобаламин, Молочная кислота",
-  },
-  {
-    id: "l_salivarius",
-    nameRu: "Лактобактерия саливариус",
-    latinName: "Lactobacillus salivarius",
-    category: "Пробиотики",
-    action:
-      "• Быстро колонизирует ротовую полость, подавляя бактерии, вызывающие зубной налет.\n" +
-      "• Вырабатывает саливарицины, уничтожающие патогенные микроорганизмы.\n" +
-      "• Уменьшает неприятный запах изо рта (галитоз).\n" +
-      "• Снижает уровень кровоточивости десен и симптомы пародонтита.\n" +
-      "• Улучшает переваривание протеинов в верхних отделах ЖКТ.",
-    activeCompounds: "Саливарицины, Молочная кислота",
-  },
-  {
-    id: "l_helveticus",
-    nameRu: "Лактобактерия гельветикус",
-    latinName: "Lactobacillus helveticus",
-    category: "Пробиотики",
-    action:
-      "• Выделяет трипептиды (IPP и VPP), ингибирующие АПФ и снижающие давление.\n" +
-      "• Снижает уровень стресса, снижая проницаемость кишечника для патогенов.\n" +
-      "• Повышает усвояемость кальция, улучшая плотность костной ткани.\n" +
-      "• Помогает улучшить качество и продолжительность сна.\n" +
-      "• Уменьшает симптом усталости при переутомлении.",
-    activeCompounds: "Биоактивные трипептиды (IPP, VPP)",
-  },
-  {
-    id: "l_gasseri",
-    nameRu: "Лактобактерия гассери",
-    latinName: "Lactobacillus gasseri",
-    category: "Пробиотики",
-    action:
-      "• Способствует уменьшению площади висцерального жира и массы тела.\n" +
-      "• Регулирует всасывание жиров в кишечнике.\n" +
-      "• Подавляет воспалительные процессы при эндометриозе и менструальных болях.\n" +
-      "• Поддерживает естественный pH урогенитальной зоны женщин.\n" +
-      "• Препятствует размножению грибковых инфекций.",
-    activeCompounds: "Гассерицин, Молочная кислота",
-  },
-
-  // ================= ГРИБЫ =================
-  {
-    id: "chaga",
-    nameRu: "Чага",
-    latinName: "Inonotus obliquus",
-    category: "Грибы",
-    action:
-      "• Обладает одним из самых высоких показателей антиоксидантной активности (ORAC).\n" +
-      "• Меланиновый комплекс защищает клетки от радиации и ультрафиолета.\n" +
-      "• Регулирует уровень сахара в крови и повышает чувствительность к инсулину.\n" +
-      "• Поддерживает работу печени и стимулирует желчевыделение.\n" +
-      "• Проявляет выраженные противовоспалительные и онкопротективные свойства.",
-    activeCompounds: "Хромогенный комплекс, Полифенолы, Бета-глюканы",
-  },
-  {
-    id: "fomitopsis",
-    nameRu: "Трутовик",
-    latinName: "Fomitopsis pinicola",
-    category: "Грибы",
-    action:
-      "• Оказывает мягкое связывающее и выбивающее действие на токсины и шлаки.\n" +
-      "• Стимулирует естественную регенерацию клеток печени (гепатопротектор).\n" +
-      "• Уменьшает воспалительные реакции в органах дыхания и ЖКТ.\n" +
-      "• Нормализует работу поджелудочной железы.\n" +
-      "• Повышает общий тонус и сопротивляемость инфекциям.",
-    activeCompounds: "Полисахариды, Трутовиковые кислоты",
-  },
-  {
-    id: "agaricus",
-    nameRu: "Агарик",
-    latinName: "Agaricus blazei",
-    category: "Грибы",
-    action:
-      "• Содержит уникальную концентрацию бета-1,3/1,6-D-глюканов.\n" +
-      "• Мощно активирует макрофаги и природные киллеры (NK-клетки).\n" +
-      "• Способствует снижению инсулинорезистентности.\n" +
-      "• Снижает риск развития автоиммунных и аллергических реакций.\n" +
-      "• Поддерживает кроветворение и лимфатическую систему.",
-    activeCompounds: "Beta-1,3/1,6-D-глюканы, Эргостерол",
-  },
-  {
-    id: "cordyceps",
-    nameRu: "Кордицепс",
-    latinName: "Cordyceps militaris",
-    category: "Грибы",
-    action:
-      "• Повышает выработку АТФ в клетках, значительно увеличивая выносливость.\n" +
-      "• Улучшает усвоение кислорода тканями и работу легких.\n" +
-      "• Расширяет кровеносные сосуды, улучшая кровоснабжение сердца и мозга.\n" +
-      "• Стимулирует либидо и поддерживает репродуктивную функцию.\n" +
-      "• Снижает уровень усталости при повышенных умственных и физических нагрузках.",
-    activeCompounds: "Кордицепин, Аденозин, Кордицеповая кислота",
-  },
-  {
-    id: "reishi",
-    nameRu: "Рейши",
-    latinName: "Ganoderma lucidum",
-    category: "Грибы",
-    action:
-      "• Выступает мощным адаптогеном, гармонизирующим нервную систему.\n" +
-      "• Нормализует структуру сна и облегчает эмоциональное выгорание.\n" +
-      "• Тритерпены снижают артериальное давление и уровень холестерина.\n" +
-      "• Тормозит высвобождение гистамина, уменьшая аллергические проявления.\n" +
-      "• Защищает миокард от гипоксии и ишемических повреждений.",
-    activeCompounds: "Ганодеровые кислоты, Тритерпены, Бета-глюканы",
-  },
-  {
-    id: "hericium",
-    nameRu: "Ежовик гребенчатый",
-    latinName: "Hericium erinaceus",
-    category: "Грибы",
-    action:
-      "• Стимулирует синтез фактора роста нервов (NGF) и нейрогенез.\n" +
-      "• Улучшает память, концентрацию внимания и скорость мышления.\n" +
-      "• Ускоряет восстановление поврежденных миелиновых оболочек нервов.\n" +
-      "• Восстанавливает слизистую оболочку желудка при гастрите и язвах.\n" +
-      "• Снижает тревожность и симптомы лёгкой депрессии.",
-    activeCompounds: "Эринацины, Гериценоны, NGF-стимуляторы",
-  },
-  {
-    id: "shiitake",
-    nameRu: "Шиитаке",
-    latinName: "Lentinula edodes",
-    category: "Грибы",
-    action:
-      "• Содержит эритаденин, который активно ускоряет выведение холестерина.\n" +
-      "• Лентинан активирует противоопухолевый и противовирусный иммунитет.\n" +
-      "• Укрепляет стенки сосудов и предотвращает тромбообразование.\n" +
-      "• Поддерживает эндокринную систему и уровень щитовидных гормонов.\n" +
-      "• Оказывает общеукрепляющее действие при истощении.",
-    activeCompounds: "Лентинан, Эритаденин, Эргостерин",
-  },
-  {
-    id: "maitake",
-    nameRu: "Майтаке",
-    latinName: "Grifola frondosa",
-    category: "Грибы",
-    action:
-      "• D-фракция полисахаридов стимулирует цитотоксическую активность T-клеток.\n" +
-      "• Нормализует уровень глюкозы и показатели гликированного гемоглобина.\n" +
-      "• Помогает регулировать метаболизм липидов и удерживать здоровый вес.\n" +
-      "• Снижает риск развития метаболического синдрома.\n" +
-      "• Выравнивает гормональный фон при синдроме поликистозных яичников.",
-    activeCompounds: "D-фракция полисахаридов, Грифолан",
-  },
-];
-
 export default function SupplementGridScreen() {
   const [selectedCategory, setSelectedCategory] = useState("Антистарение");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredItems = useMemo(() => {
-    return SUPPLEMENTS_DATA.filter((item) => {
-      const matchesCategory = item.category === selectedCategory;
+  const isSearching = searchQuery.trim().length > 0;
 
-      const query = searchQuery.trim().toLowerCase();
+  const filteredItems = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+
+    return SUPPLEMENTS_DATA.filter((item) => {
       const matchesSearch =
-        query === "" ||
         item.nameRu.toLowerCase().includes(query) ||
         item.latinName.toLowerCase().includes(query) ||
         (item.action && item.action.toLowerCase().includes(query)) ||
-        item.activeCompounds.toLowerCase().includes(query);
+        (item.activeCompounds &&
+          item.activeCompounds.toLowerCase().includes(query));
 
-      return matchesCategory && matchesSearch;
+      if (query !== "") {
+        return matchesSearch;
+      }
+
+      return item.category === selectedCategory;
     });
   }, [selectedCategory, searchQuery]);
+
+  const handleSelectCategory = (category) => {
+    if (isSearching) {
+      setSearchQuery(""); // Сбрасываем поиск при нажатии на категорию
+    }
+    setSelectedCategory(category);
+  };
 
   const renderCard = ({ item }) => (
     <TouchableOpacity activeOpacity={0.8} style={styles.card}>
@@ -504,6 +71,11 @@ export default function SupplementGridScreen() {
           </Text>
         </View>
       </View>
+      {item.synergy && (
+        <View style={styles.synergyBadge}>
+          <Text style={styles.synergyBadgeText}>⚠️ {item.synergy}</Text>
+        </View>
+      )}
     </TouchableOpacity>
   );
 
@@ -511,7 +83,7 @@ export default function SupplementGridScreen() {
     <SafeAreaView style={styles.container}>
       <Text style={styles.headerTitle}>Справочник биокомпонентов</Text>
 
-      {/* Поисковая строка */}
+      {/* Поисковая строка с кнопкой сброса */}
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
@@ -519,32 +91,50 @@ export default function SupplementGridScreen() {
           placeholderTextColor="#64748B"
           value={searchQuery}
           onChangeText={setSearchQuery}
-          clearButtonMode="while-editing"
         />
+        {isSearching && (
+          <TouchableOpacity
+            style={styles.clearSearchButton}
+            onPress={() => setSearchQuery("")}
+          >
+            <Text style={styles.clearSearchText}>✕</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
-      {/* Фильтр категорий */}
-      <View style={styles.filterWrapper}>
-        {CATEGORIES.map((category) => {
-          const isActive = selectedCategory === category;
-          return (
-            <TouchableOpacity
-              key={category}
-              onPress={() => setSelectedCategory(category)}
-              style={[styles.filterChip, isActive && styles.filterChipActive]}
-            >
-              <Text
-                style={[
-                  styles.filterChipText,
-                  isActive && styles.filterChipTextActive,
-                ]}
+      {/* Индикатор глобального поиска или Фильтр категорий */}
+      {isSearching ? (
+        <View style={styles.searchStatusContainer}>
+          <Text style={styles.searchStatusText}>
+            🔍 Поиск по всей базе (найдено: {filteredItems.length})
+          </Text>
+          <TouchableOpacity onPress={() => setSearchQuery("")}>
+            <Text style={styles.resetSearchLink}>Сбросить</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View style={styles.filterWrapper}>
+          {CATEGORIES.map((category) => {
+            const isActive = selectedCategory === category;
+            return (
+              <TouchableOpacity
+                key={category}
+                onPress={() => handleSelectCategory(category)}
+                style={[styles.filterChip, isActive && styles.filterChipActive]}
               >
-                {category}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
+                <Text
+                  style={[
+                    styles.filterChipText,
+                    isActive && styles.filterChipTextActive,
+                  ]}
+                >
+                  {category}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      )}
 
       {/* Сетка компонентов FlatList */}
       <View style={styles.listContainer}>
@@ -562,119 +152,5 @@ export default function SupplementGridScreen() {
     </SafeAreaView>
   );
 }
-
-// --- СТИЛИ ---
-const { width } = Dimensions.get("window");
-const CARD_WIDTH = (width - 36) / 2;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#0F172A",
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "#F8FAFC",
-    marginHorizontal: 16,
-    marginTop: 12,
-    marginBottom: 8,
-  },
-  searchContainer: {
-    paddingHorizontal: 16,
-    marginBottom: 10,
-  },
-  searchInput: {
-    backgroundColor: "#1E293B",
-    color: "#F8FAFC",
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    fontSize: 13,
-    borderWidth: 1,
-    borderColor: "#334155",
-  },
-  filterWrapper: {
-    height: 44,
-    marginBottom: 6,
-  },
-  filterWrapper: {
-    paddingHorizontal: 16,
-    marginBottom: 10,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-  },
-  filterChip: {
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 18,
-    backgroundColor: "#1E293B",
-    borderWidth: 1,
-    borderColor: "#334155",
-  },
-  filterChipActive: {
-    backgroundColor: "#10B981",
-    borderColor: "#10B981",
-  },
-  filterChipText: {
-    fontSize: 13,
-    color: "#94A3B8",
-    fontWeight: "500",
-  },
-  filterChipTextActive: {
-    color: "#FFFFFF",
-    fontWeight: "700",
-  },
-  listContainer: {
-    flex: 1,
-  },
-  listPadding: {
-    paddingHorizontal: 12,
-    paddingTop: 4,
-    paddingBottom: 20,
-  },
-  card: {
-    width: CARD_WIDTH,
-    backgroundColor: "#1E293B",
-    borderRadius: 12,
-    margin: 6,
-    padding: 12,
-    justifyContent: "space-between",
-    borderWidth: 1,
-    borderColor: "#334155",
-  },
-  cardTitle: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: "#F8FAFC",
-  },
-  cardSubtitle: {
-    fontSize: 11,
-    fontStyle: "italic",
-    color: "#64748B",
-    marginBottom: 8,
-  },
-  infoWrapper: {
-    marginBottom: 8,
-  },
-  infoLabel: {
-    fontSize: 10,
-    color: "#10B981",
-    fontWeight: "600",
-    marginBottom: 2,
-  },
-  infoText: {
-    fontSize: 11,
-    color: "#94A3B8",
-    lineHeight: 15,
-  },
-  emptyText: {
-    color: "#64748B",
-    textAlign: "center",
-    marginTop: 40,
-    fontSize: 14,
-  },
-});
 
 registerRootComponent(SupplementGridScreen);
