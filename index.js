@@ -13,10 +13,32 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // --- КАТЕГОРИИ ---
-const CATEGORIES = ["Витамины", "Минералы", "Пробиотики", "Грибы"];
+const CATEGORIES = [
+  "Антистарение",
+  "Витамины",
+  "Минералы",
+  "Пробиотики",
+  "Грибы",
+];
 
 // --- ИСХОДНЫЕ ДАННЫЕ С ПОДРОБНЫМИ ОПИСАНИЯМИ ---
 const SUPPLEMENTS_DATA = [
+  // ================= АНТИСТАРЕНИЕ =================
+  {
+    id: "quercetin",
+    nameRu: "Кверцетин",
+    latinName: "Quercetin",
+    category: "Антистарение",
+    action:
+      "• Выступает мощным сенолитиком, способствуя элиминации стареющих (senescent) клеток.\n" +
+      "• Ингибирует ферменты воспаления (3CLpro, 5-LOX, COX-2) и уменьшает проявления SASP.\n" +
+      "• Проявляет капилляропротекторные свойства и снижает проницаемость сосудистой стенки.\n" +
+      "• Стабилизирует мембраны тучных клеток, блокируя высвобождение гистамина.\n" +
+      "• Повышает биодоступность и синергично усиливает действие других полифенолов.",
+    activeCompounds:
+      "Кверцетина дигидрат, Изокверцитрин, Энзиматически модифицированный кверцетин (EMIQ)",
+  },
+
   // ================= ВИТАМИНЫ =================
   {
     id: "vitamin_b1",
@@ -443,7 +465,7 @@ const SUPPLEMENTS_DATA = [
 ];
 
 export default function SupplementGridScreen() {
-  const [selectedCategory, setSelectedCategory] = useState("Витамины");
+  const [selectedCategory, setSelectedCategory] = useState("Антистарение");
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredItems = useMemo(() => {
@@ -477,7 +499,7 @@ export default function SupplementGridScreen() {
 
         <View style={styles.infoWrapper}>
           <Text style={styles.infoLabel}>Вещества:</Text>
-          <Text style={styles.infoText} numberOfLines={3}>
+          <Text style={styles.infoText} numberOfLines={9}>
             {item.activeCompounds}
           </Text>
         </View>
@@ -503,31 +525,25 @@ export default function SupplementGridScreen() {
 
       {/* Фильтр категорий */}
       <View style={styles.filterWrapper}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filterContainer}
-        >
-          {CATEGORIES.map((category) => {
-            const isActive = selectedCategory === category;
-            return (
-              <TouchableOpacity
-                key={category}
-                onPress={() => setSelectedCategory(category)}
-                style={[styles.filterChip, isActive && styles.filterChipActive]}
+        {CATEGORIES.map((category) => {
+          const isActive = selectedCategory === category;
+          return (
+            <TouchableOpacity
+              key={category}
+              onPress={() => setSelectedCategory(category)}
+              style={[styles.filterChip, isActive && styles.filterChipActive]}
+            >
+              <Text
+                style={[
+                  styles.filterChipText,
+                  isActive && styles.filterChipTextActive,
+                ]}
               >
-                <Text
-                  style={[
-                    styles.filterChipText,
-                    isActive && styles.filterChipTextActive,
-                  ]}
-                >
-                  {category}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
+                {category}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
       </View>
 
       {/* Сетка компонентов FlatList */}
@@ -582,13 +598,15 @@ const styles = StyleSheet.create({
     height: 44,
     marginBottom: 6,
   },
-  filterContainer: {
+  filterWrapper: {
     paddingHorizontal: 16,
-    alignItems: "center",
+    marginBottom: 10,
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 8,
   },
   filterChip: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
     paddingVertical: 6,
     borderRadius: 18,
     backgroundColor: "#1E293B",
