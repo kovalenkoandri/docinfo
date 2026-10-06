@@ -13,10 +13,44 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // --- КАТЕГОРИИ ---
-const CATEGORIES = ["Пробиотики", "Грибы"];
+const CATEGORIES = ["Витамины", "Пробиотики", "Грибы"];
 
-// --- ИСХОДНЫЕ ДАННЫЕ (Пробиотики + Грибы) ---
+// --- ИСХОДНЫЕ ДАННЫЕ (Витамины + Пробиотики + Грибы) ---
 const SUPPLEMENTS_DATA = [
+  // ================= ВИТАМИНЫ =================
+  {
+    id: "vitamin_b1",
+    nameRu: "Витамин B1",
+    latinName: "Thiamine",
+    category: "Витамины",
+    action: "углеводный обмен, энергия и работа нервной системы",
+    activeCompounds: "Тиамина гидрохлорид, Бенфотиамин",
+  },
+  {
+    id: "vitamin_b2",
+    nameRu: "Витамин B2",
+    latinName: "Riboflavin",
+    category: "Витамины",
+    action: "клеточное дыхание, здоровье кожи и зрения",
+    activeCompounds: "Рибофлавин, Рибофлавин-5-фосфат (R-5-P)",
+  },
+  {
+    id: "vitamin_b3",
+    nameRu: "Витамин B3",
+    latinName: "Niacin / Nicotinamide",
+    category: "Витамины",
+    action: "синтез АТФ, липидный обмен и здоровье сосудов",
+    activeCompounds: "Никотиновая кислота, Никотинамид, NMN, NR",
+  },
+  {
+    id: "vitamin_b6",
+    nameRu: "Витамин B6",
+    latinName: "Pyridoxine",
+    category: "Витамины",
+    action: "синтез нейромедиаторов и белковый обмен",
+    activeCompounds: "Пиридоксина гидрохлорид, Пиридоксаль-5-фосфат (P-5-P)",
+  },
+
   // ================= ПРОБИОТИКИ =================
   {
     id: "b_bifidum",
@@ -223,7 +257,7 @@ const SUPPLEMENTS_DATA = [
 ];
 
 export default function SupplementGridScreen() {
-  const [selectedCategory, setSelectedCategory] = useState("Пробиотики");
+  const [selectedCategory, setSelectedCategory] = useState("Витамины");
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredItems = useMemo(() => {
