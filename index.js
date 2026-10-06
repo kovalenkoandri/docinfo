@@ -18,6 +18,7 @@ const CATEGORIES = [
   "Минералы",
   "Пробиотики",
   "Грибы",
+  "Противогрибковые средства",
 ];
 
 export default function SupplementGridScreen() {
