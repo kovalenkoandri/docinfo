@@ -10,6 +10,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SUPPLEMENTS_DATA } from "./supplementsData";
 import { styles } from "./appStyles";
+import { HighlightedText } from "./components/HighlightedText";
 
 const CATEGORIES = [
   "Антистарение",
@@ -54,23 +55,45 @@ export default function SupplementGridScreen() {
   const renderCard = ({ item }) => (
     <TouchableOpacity activeOpacity={0.8} style={styles.card}>
       <View>
-        <Text style={styles.cardTitle}>{item.nameRu}</Text>
-        <Text style={styles.cardSubtitle}>{item.latinName}</Text>
+        {/* Заголовок */}
+        <HighlightedText
+          text={item.nameRu}
+          highlight={searchQuery}
+          style={styles.cardTitle}
+          highlightStyle={styles.highlightText}
+        />
 
+        {/* Латинское название */}
+        <HighlightedText
+          text={item.latinName}
+          highlight={searchQuery}
+          style={styles.cardSubtitle}
+          highlightStyle={styles.highlightText}
+        />
+
+        {/* Действие */}
         <View style={styles.infoWrapper}>
           <Text style={styles.infoLabel}>Действие:</Text>
-          <Text style={styles.infoText} numberOfLines={29}>
-            {item.action}
-          </Text>
+          <HighlightedText
+            text={item.action}
+            highlight={searchQuery}
+            style={styles.infoText}
+            highlightStyle={styles.highlightText}
+          />
         </View>
 
+        {/* Вещества */}
         <View style={styles.infoWrapper}>
           <Text style={styles.infoLabel}>Вещества:</Text>
-          <Text style={styles.infoText} numberOfLines={9}>
-            {item.activeCompounds}
-          </Text>
+          <HighlightedText
+            text={item.activeCompounds}
+            highlight={searchQuery}
+            style={styles.infoText}
+            highlightStyle={styles.highlightText}
+          />
         </View>
       </View>
+
       {item.synergy && (
         <View style={styles.synergyBadge}>
           <Text style={styles.synergyBadgeText}>⚠️ {item.synergy}</Text>

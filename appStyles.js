@@ -166,4 +166,10 @@ export const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
   },
+  highlightText: {
+    backgroundColor: "rgba(16, 185, 129, 0.35)",
+    color: "#34D399",
+    fontWeight: "bold",
+    borderRadius: 2,
+  },
 });
