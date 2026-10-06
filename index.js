@@ -12,115 +12,232 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// --- ИСХОДНЫЕ ДАННЫЕ (Грибы + Пробиотики) ---
-const SUPPLEMENTS_DATA = [
-  // --- Грибы ---
-  {
-    id: "chaga",
-    nameRu: "Чага",
-    latinName: "Inonotus obliquus",
-    categories: ["Иммунитет"],
-    activeCompounds: "Хромогенный комплекс, полифенолы, ORAC, бета-глюканы",
-  },
-  {
-    id: "fomitopsis",
-    nameRu: "Трутовик",
-    latinName: "Fomitopsis pinicola",
-    categories: ["Иммунитет"],
-    activeCompounds: "Полисахариды, трутовиковые кислоты, стероиды",
-  },
-  {
-    id: "agaricus",
-    nameRu: "Агарик",
-    latinName: "Agaricus blazei",
-    categories: ["Иммунитет"],
-    activeCompounds: "Beta-1,3/1,6-D-глюканы, эргостерол",
-  },
-  {
-    id: "cordyceps",
-    nameRu: "Кордицепс",
-    latinName: "Cordyceps militaris",
-    categories: ["Энергия"],
-    activeCompounds: "Кордицепин, аденозин, кордицеповая кислота",
-  },
-  {
-    id: "reishi",
-    nameRu: "Рейши",
-    latinName: "Ganoderma lucidum",
-    categories: ["Сон/Антистресс", "Иммунитет"],
-    activeCompounds: "Ганодеровые кислоты, тритерпены, полисахариды",
-  },
-  {
-    id: "hericium",
-    nameRu: "Ежовик гребенчатый",
-    latinName: "Hericium erinaceus",
-    categories: ["Ноотропы"],
-    activeCompounds: "Эринацины, гериценоны, фактор роста нервов (NGF)",
-  },
-  {
-    id: "shiitake",
-    nameRu: "Шиитаке",
-    latinName: "Lentinula edodes",
-    categories: ["Иммунитет"],
-    activeCompounds: "Лентинан, эритаденин, B-глюканы",
-  },
-  {
-    id: "maitake",
-    nameRu: "Майтаке",
-    latinName: "Grifola frondosa",
-    categories: ["Иммунитет", "Энергия"],
-    activeCompounds: "D-фракция полисахаридов, грифолан",
-  },
+// --- КАТЕГОРИИ ---
+const CATEGORIES = ["Пробиотики", "Грибы"];
 
-  // --- Пробиотики (Бифидобактерии) ---
+// --- ИСХОДНЫЕ ДАННЫЕ (Пробиотики + Грибы) ---
+const SUPPLEMENTS_DATA = [
+  // ================= ПРОБИОТИКИ =================
   {
     id: "b_bifidum",
     nameRu: "Бифидобактерия бифидум",
     latinName: "Bifidobacterium bifidum",
-    categories: ["Пробиотики", "Иммунитет"],
-    activeCompounds:
-      "Молочная кислота, уксусная кислота, короткоцепочечные жирные кислоты (КЦЖК)",
+    category: "Пробиотики",
+    action: "защитный барьер слизистой",
+    activeCompounds: "КЦЖК, Молочная кислота",
   },
   {
     id: "b_longum",
     nameRu: "Бифидобактерия лонгум",
     latinName: "Bifidobacterium longum",
-    categories: ["Пробиотики", "Иммунитет", "Сон/Антистресс"],
-    activeCompounds: "КЦЖК, пептиды, синтез витаминов группы B, антиоксиданты",
+    category: "Пробиотики",
+    action: "снижение воспаления, поддержка Оси «кишечник-мозг»",
+    activeCompounds: "КЦЖК, Витамины группы B",
   },
   {
     id: "b_adolescentis",
     nameRu: "Бифидобактерия адолесцентис",
     latinName: "Bifidobacterium adolescentis",
-    categories: ["Пробиотики", "Иммунитет"],
-    activeCompounds: "ГАМК (GABA), фолаты, ацетат, бутират",
+    category: "Пробиотики",
+    action: "стимуляция нейромедиаторов и регуляция настроения",
+    activeCompounds: "ГАМК (GABA), Фолаты, Бутират",
+  },
+  {
+    id: "b_breve",
+    nameRu: "Бифидобактерия бреве",
+    latinName: "Bifidobacterium breve",
+    category: "Пробиотики",
+    action: "защита от кишечных инфекций и поддержка метаболизма",
+    activeCompounds: "Уксусная кислота, Органические кислоты",
+  },
+  {
+    id: "b_animalis_lactis",
+    nameRu: "Бифидобактерия анималис лактис",
+    latinName: "Bifidobacterium animalis ssp. lactis",
+    category: "Пробиотики",
+    action: "улучшение перистальтики и пищеварения",
+    activeCompounds: "Органические кислоты, КЦЖК",
+  },
+  {
+    id: "b_longum_longum",
+    nameRu: "Бифидобактерия лонгум лонгум",
+    latinName: "Bifidobacterium longum ssp. longum",
+    category: "Пробиотики",
+    action: "антиоксидантная защита и усвоение клетчатки",
+    activeCompounds: "Антиоксиданты, Метаболиты растительных волокон",
+  },
+  {
+    id: "b_longum_infantis",
+    nameRu: "Бифидобактерия лонгум инфантис",
+    latinName: "Bifidobacterium longum ssp. infantis",
+    category: "Пробиотики",
+    action: "укрепление стенки кишечника и переваривание олигосахаридов",
+    activeCompounds: "Утилизаторы HMO, Короткоцепочечные жирные кислоты",
+  },
+  {
+    id: "l_acidophilus",
+    nameRu: "Лактобактерия ацидофильная",
+    latinName: "Lactobacillus acidophilus",
+    category: "Пробиотики",
+    action: "расщепление лактозы и подавление патогенов",
+    activeCompounds: "Молочная кислота, Ацидофилин",
+  },
+  {
+    id: "l_plantarum",
+    nameRu: "Лактобактерия плантарум",
+    latinName: "Lactobacillus plantarum",
+    category: "Пробиотики",
+    action: "укрепление барьера кишечника и антимикробное действие",
+    activeCompounds: "Плантарицины, КЦЖК",
+  },
+  {
+    id: "l_rhamnosus",
+    nameRu: "Лактобактерия рамнозус",
+    latinName: "Lactobacillus rhamnosus",
+    category: "Пробиотики",
+    action: "стимуляция местного иммунитета IgA",
+    activeCompounds: "Молочная кислота, Бактериоцины",
+  },
+  {
+    id: "l_bulgaricus",
+    nameRu: "Болгарская палочка",
+    latinName: "Lactobacillus delbrueckii ssp. bulgaricus",
+    category: "Пробиотики",
+    action: "ферментация молочных продуктов и подавление гнилостной флоры",
+    activeCompounds: "Молочная кислота, Ацетальдегид",
+  },
+  {
+    id: "l_casei",
+    nameRu: "Лактобактерия казеи",
+    latinName: "Lactobacillus casei",
+    category: "Пробиотики",
+    action: "нормализация моторики и поддержка микрофлоры",
+    activeCompounds: "Биоактивные пептиды, Молочная кислота",
+  },
+  {
+    id: "l_paracasei",
+    nameRu: "Лактобактерия параказеи",
+    latinName: "Lactobacillus paracasei",
+    category: "Пробиотики",
+    action: "модуляция иммунного ответа и противоаллергенный эффект",
+    activeCompounds: "Липотейхоевые кислоты, Бактериоцины",
+  },
+  {
+    id: "l_reuteri",
+    nameRu: "Лактобактерия ройтери",
+    latinName: "Lactobacillus reuteri",
+    category: "Пробиотики",
+    action: "подавление роста широкого спектра вредных бактерий",
+    activeCompounds: "Ройтерин, Кобаламин",
+  },
+  {
+    id: "l_salivarius",
+    nameRu: "Лактобактерия саливариус",
+    latinName: "Lactobacillus salivarius",
+    category: "Пробиотики",
+    action: "оздоровление ротовой полости и ЖКТ",
+    activeCompounds: "Саливарицины, Молочная кислота",
+  },
+  {
+    id: "l_helveticus",
+    nameRu: "Лактобактерия гельветикус",
+    latinName: "Lactobacillus helveticus",
+    category: "Пробиотики",
+    action: "снижение давления и регуляция стресс-ответа",
+    activeCompounds: "Биоактивные трипептиды (IPP, VPP)",
+  },
+  {
+    id: "l_gasseri",
+    nameRu: "Лактобактерия гассери",
+    latinName: "Lactobacillus gasseri",
+    category: "Пробиотики",
+    action: "регуляция жирового обмена и контроля веса",
+    activeCompounds: "Гассерицин, Молочная кислота",
+  },
+
+  // ================= ГРИБЫ =================
+  {
+    id: "chaga",
+    nameRu: "Чага",
+    latinName: "Inonotus obliquus",
+    category: "Грибы",
+    action: "мощная антиоксидантная защита и иммуномодуляция",
+    activeCompounds: "Хромогенный комплекс, Полифенолы, Бета-глюканы",
+  },
+  {
+    id: "fomitopsis",
+    nameRu: "Трутовик",
+    latinName: "Fomitopsis pinicola",
+    category: "Грибы",
+    action: "противовоспалительное действие и очищение",
+    activeCompounds: "Полисахариды, Трутовиковые кислоты",
+  },
+  {
+    id: "agaricus",
+    nameRu: "Агарик",
+    latinName: "Agaricus blazei",
+    category: "Грибы",
+    action: "активация врожденного иммунитета",
+    activeCompounds: "Beta-1,3/1,6-D-глюканы, Эргостерол",
+  },
+  {
+    id: "cordyceps",
+    nameRu: "Кордицепс",
+    latinName: "Cordyceps militaris",
+    category: "Грибы",
+    action: "повышение выносливости и синтеза АТФ",
+    activeCompounds: "Кордицепин, Аденозин",
+  },
+  {
+    id: "reishi",
+    nameRu: "Рейши",
+    latinName: "Ganoderma lucidum",
+    category: "Грибы",
+    action: "адаптогенное действие, улучшение сна и снятие стресса",
+    activeCompounds: "Ганодеровые кислоты, Тритерпены",
+  },
+  {
+    id: "hericium",
+    nameRu: "Ежовик гребенчатый",
+    latinName: "Hericium erinaceus",
+    category: "Грибы",
+    action: "стимуляция нейрогенеза и концентрации внимания",
+    activeCompounds: "Эринацины, Гериценоны, NGF",
+  },
+  {
+    id: "shiitake",
+    nameRu: "Шиитаке",
+    latinName: "Lentinula edodes",
+    category: "Грибы",
+    action: "поддержка сердечно-сосудистой системы и иммунитета",
+    activeCompounds: "Лентинан, Эритаденин",
+  },
+  {
+    id: "maitake",
+    nameRu: "Майтаке",
+    latinName: "Grifola frondosa",
+    category: "Грибы",
+    action: "регуляция уровня сахара и иммунная поддержка",
+    activeCompounds: "D-фракция полисахаридов, Грифолан",
   },
 ];
 
-const CATEGORIES = [
-  "Все",
-  "Пробиотики",
-  "Ноотропы",
-  "Иммунитет",
-  "Энергия",
-  "Сон/Антистресс",
-];
-
 export default function SupplementGridScreen() {
-  const [selectedCategory, setSelectedCategory] = useState("Все");
+  const [selectedCategory, setSelectedCategory] = useState("Пробиотики");
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredItems = useMemo(() => {
     return SUPPLEMENTS_DATA.filter((item) => {
-      const matchesCategory =
-        selectedCategory === "Все" ||
-        item.categories.includes(selectedCategory);
+      // 1. Фильтр по выбранной категории
+      const matchesCategory = item.category === selectedCategory;
 
+      // 2. Поиск по названию, латыни, действию и веществам
       const query = searchQuery.trim().toLowerCase();
       const matchesSearch =
         query === "" ||
         item.nameRu.toLowerCase().includes(query) ||
         item.latinName.toLowerCase().includes(query) ||
+        (item.action && item.action.toLowerCase().includes(query)) ||
         item.activeCompounds.toLowerCase().includes(query);
 
       return matchesCategory && matchesSearch;
@@ -133,33 +250,32 @@ export default function SupplementGridScreen() {
         <Text style={styles.cardTitle}>{item.nameRu}</Text>
         <Text style={styles.cardSubtitle}>{item.latinName}</Text>
 
-        <View style={styles.compoundsWrapper}>
-          <Text style={styles.compoundsLabel}>Вещества / Продукты:</Text>
-          <Text style={styles.cardCompounds} numberOfLines={3}>
+        <View style={styles.infoWrapper}>
+          <Text style={styles.infoLabel}>Действие:</Text>
+          <Text style={styles.infoText} numberOfLines={2}>
+            {item.action}
+          </Text>
+        </View>
+
+        <View style={styles.infoWrapper}>
+          <Text style={styles.infoLabel}>Вещества:</Text>
+          <Text style={styles.infoText} numberOfLines={2}>
             {item.activeCompounds}
           </Text>
         </View>
-      </View>
-
-      <View style={styles.badgeContainer}>
-        {item.categories.map((cat) => (
-          <View key={cat} style={styles.badge}>
-            <Text style={styles.badgeText}>{cat}</Text>
-          </View>
-        ))}
       </View>
     </TouchableOpacity>
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.headerTitle}>Справочник нутрицевтиков</Text>
+      <Text style={styles.headerTitle}>Справочник биокомпонентов</Text>
 
       {/* Поисковая строка */}
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Поиск по названию или веществам (ГАМК, КЦЖК, NGF...)"
+          placeholder="Поиск по названию, действию или веществам..."
           placeholderTextColor="#64748B"
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -254,7 +370,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   filterChip: {
-    paddingHorizontal: 14,
+    paddingHorizontal: 16,
     paddingVertical: 6,
     borderRadius: 18,
     backgroundColor: "#1E293B",
@@ -293,7 +409,7 @@ const styles = StyleSheet.create({
     borderColor: "#334155",
   },
   cardTitle: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "700",
     color: "#F8FAFC",
   },
@@ -303,36 +419,19 @@ const styles = StyleSheet.create({
     color: "#64748B",
     marginBottom: 8,
   },
-  compoundsWrapper: {
-    marginBottom: 10,
+  infoWrapper: {
+    marginBottom: 6,
   },
-  compoundsLabel: {
+  infoLabel: {
     fontSize: 10,
     color: "#10B981",
     fontWeight: "600",
-    marginBottom: 2,
+    marginBottom: 1,
   },
-  cardCompounds: {
+  infoText: {
     fontSize: 11,
     color: "#94A3B8",
-    lineHeight: 15,
-  },
-  badgeContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 4,
-    marginTop: 8,
-  },
-  badge: {
-    backgroundColor: "#0F172A",
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-  },
-  badgeText: {
-    fontSize: 9,
-    color: "#38BDF8",
-    fontWeight: "600",
+    lineHeight: 14,
   },
   emptyText: {
     color: "#64748B",
